@@ -1,4 +1,5 @@
-
 config.def.h.orig
 dwm.c.orig
 *.diff
+*.rej
+dwm.1
