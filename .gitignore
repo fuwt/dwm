@@ -3,3 +3,9 @@ dwm.c.orig
 *.diff
 *.rej
 dwm.1
+
+drw.o
+dwm
+dwm.o
+util.o
+config.h

@@ -8,7 +8,12 @@ static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const int vertpad            = 10;       /* vertical padding of bar */
 static const int sidepad            = 10;       /* horizontal padding of bar */
-static const char *fonts[]          = { "SauceCodePro Nerd Font:size=12" };
+static const char *fonts[]          = { "SauceCodePro Nerd Font:size=13" };
+static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
+static const unsigned int systrayonleft = 0;   	/* 0: systray in the right corner, >0: systray on left of status text */
+static const unsigned int systrayspacing = 2;   /* systray spacing */
+static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display systray on the first monitor, False: display systray on the last monitor*/
+static const int showsystray        = 1;     /* 0 means no systray */
 static const char dmenufont[]       = "monospace:size=10";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
@@ -23,7 +28,7 @@ static const char *colors[][3]      = {
 };
 
 /* tagging */
-static const char *tags[] = { "", "", "", "", "", ""};
+static const char *tags[] = { "Ⅰ", "Ⅱ", "Ⅲ", "Ⅳ", "Ⅴ", "Ⅵ"};
 
 static const unsigned int ulinepad	= 2;	/* horizontal padding between the underline and tag */
 static const unsigned int ulinestroke	= 2;	/* thickness / height of the underline */
@@ -36,14 +41,14 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class                 instance    title       tags mask     isfloating   monitor */
-	{ "Google-chrome",       NULL,       NULL,       1  << 1,      0,           -1 },
-	{ "icalingua",           NULL,       NULL,       1  << 2,      0,           -1 },
-	{ "weixin",              NULL,       NULL,       1  << 3,      0,           -1 },
-	{ "TelegramDesktop",     NULL,       NULL,       1  << 4,      0,           -1 },
-	{ "wps",                 NULL,       NULL,       1  << 5,      0,           -1 },
-	{ "wpp",                 NULL,       NULL,       1  << 5,      0,           -1 },
-	{ "wpspdf",              NULL,       NULL,       1  << 5,      0,           -1 },
-	{ "et",                  NULL,       NULL,       1  << 5,      0,           -1 },
+    { "Gimp",                NULL,       NULL,       0,            1,           -1 },
+	/* { "icalingua",           NULL,       NULL,       1  << 2,      0,           -1 }, */
+	/* { "weixin",              NULL,       NULL,       1  << 3,      0,           -1 }, */
+	/* { "TelegramDesktop",     NULL,       NULL,       1  << 4,      0,           -1 }, */
+	/* { "wps",                 NULL,       NULL,       1  << 5,      0,           -1 }, */
+	/* { "wpp",                 NULL,       NULL,       1  << 5,      0,           -1 }, */
+	/* { "wpspdf",              NULL,       NULL,       1  << 5,      0,           -1 }, */
+	/* { "et",                  NULL,       NULL,       1  << 5,      0,           -1 }, */
 };
 
 /* layout(s) */
@@ -72,15 +77,19 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "rofi", "-no-lazy-grab", "-show", "drun", "-theme", "~/.config/rofi/launchers/misc/kde_simplemenu.rasi", NULL };
+static const char *dmenucmd[] = { "myrofi", NULL };
 static const char *termcmd[]  = { "alacritty", NULL };
 static const char *flameshotcmd[]  = { "flameshot", "gui", NULL };
+static const char scratchpadname[] = "scratchpad";
+/* static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "120x34", NULL }; */
+static const char *scratchpadcmd[] = { "alacritty", "-t", scratchpadname, NULL };
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
-	{ 0,                            XK_Print,     spawn,          {.v = flameshotcmd } },
+	{ 0,                            XK_Print,  spawn,          {.v = flameshotcmd } },
+  { MODKEY,                       XK_grave,  togglescratch,  {.v = scratchpadcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
@@ -91,6 +100,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
+	{ Mod1Mask|ControlMask,         XK_w,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
@@ -121,8 +131,8 @@ static Key keys[] = {
 /* click can be ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin */
 static Button buttons[] = {
 	/* click                event mask      button          function        argument */
-	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
-	{ ClkLtSymbol,          0,              Button3,        setlayout,      {.v = &layouts[2]} },
+	{ ClkTagBar,            MODKEY,         Button1,        tag,            {0} },
+	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
 	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
