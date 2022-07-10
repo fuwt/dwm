@@ -936,7 +936,7 @@ drawbar(Monitor *m)
 
 	/* draw status first so it can be overdrawn by tags later */
 	if (m == selmon) { /* status is only drawn on selected monitor */
-		tw = m->ww - drawstatusbar(m, bh, stext, stw);
+		tw = m->ww - drawstatusbar(m, bh, stext, stw) - 1;
 	}
 
 	resizebarwin(m);
@@ -970,7 +970,6 @@ drawbar(Monitor *m)
 				drw_rect(drw, x + boxs, boxs, boxw, boxw, m->sel->isfixed, 0);
 		} else {
 			drw_setscheme(drw, scheme[SchemeNorm]);
-			/* drw_rect(drw, x, 0, w - 2 * sp, bh, 1, 1); */
 			drw_rect(drw, x, 0, w, bh, 1, 1);
 		}
 	}

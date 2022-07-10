@@ -19,7 +19,7 @@ static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
-static const char col_cyan[]        = "#006688";
+static const char col_cyan[]        = "#F86D54";
 static const char col_orange[]        = "#FA8E43";
 static const char *colors[][3]      = {
 	/*               fg         bg          border   */
@@ -79,6 +79,8 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "myrofi", NULL };
 static const char *termcmd[]  = { "alacritty", NULL };
+static const char *volupcmd[]  = { "volup", NULL };
+static const char *voldowncmd[]  = { "voldown", NULL };
 static const char *flameshotcmd[]  = { "flameshot", "gui", NULL };
 static const char scratchpadname[] = "scratchpad";
 /* static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "120x34", NULL }; */
@@ -135,6 +137,8 @@ static Button buttons[] = {
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
 	{ ClkWinTitle,          0,              Button2,        zoom,           {0} },
 	{ ClkStatusText,        0,              Button2,        spawn,          {.v = termcmd } },
+	{ ClkStatusText,        0,              Button4,        spawn,          {.v = volupcmd } },
+	{ ClkStatusText,        0,              Button5,        spawn,          {.v = voldowncmd } },
 	{ ClkClientWin,         MODKEY,         Button1,        movemouse,      {0} },
 	{ ClkClientWin,         MODKEY,         Button2,        togglefloating, {0} },
 	{ ClkClientWin,         MODKEY,         Button3,        resizemouse,    {0} },
