@@ -574,6 +574,8 @@ clientmessage(XEvent *e)
 			c->mon = selmon;
 			c->next = systray->icons;
 			systray->icons = c;
+      XClassHint ch = {"systray", "systray"};
+      XSetClassHint(dpy, c->win, &ch);
 			if (!XGetWindowAttributes(dpy, c->win, &wa)) {
 				/* use sane defaults */
 				wa.width = bh;
@@ -2410,6 +2412,8 @@ updatesystray(void)
 		wa.override_redirect = True;
 		wa.background_pixel  = scheme[SchemeNorm][ColBg].pixel;
 		XSelectInput(dpy, systray->win, SubstructureNotifyMask);
+		XClassHint ch = {"systray", "systray"};
+		XSetClassHint(dpy, systray->win, &ch);
 		XChangeProperty(dpy, systray->win, netatom[NetSystemTrayOrientation], XA_CARDINAL, 32,
 				PropModeReplace, (unsigned char *)&netatom[NetSystemTrayOrientationHorz], 1);
 		XChangeWindowAttributes(dpy, systray->win, CWEventMask|CWOverrideRedirect|CWBackPixel, &wa);
@@ -2449,6 +2453,7 @@ updatesystray(void)
 	/* redraw background */
 	XSetForeground(dpy, drw->gc, scheme[SchemeNorm][ColBg].pixel);
 	XFillRectangle(dpy, systray->win, drw->gc, 0, 0, w, bh);
+
 	XSync(dpy, False);
 }
 
