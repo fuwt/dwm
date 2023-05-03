@@ -1,0 +1,6 @@
+.cache/
+*.diff
+*.o
+dwm
+compile_commands.json
+events.json
