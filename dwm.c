@@ -160,6 +160,8 @@ typedef struct Systray   Systray;
 struct Systray {
 	Window win;
 	Client *icons;
+	int x;
+	Clr bg;
 };
 
 /* function declarations */
@@ -879,8 +881,15 @@ drawstatusbar(Monitor *m, int bh, char* stext) {
 					x += atoi(text + ++i);
 				} else if (text[i] == 'a') {
 					w = getsystraywidth();
-					systrayposx = x;
+					systray->x = x;
 					x += w;
+					if(text[i + 1] == '^')
+						continue;
+					char buf[8];
+					memcpy(buf, (char*)text+i+1, 7);
+					buf[7] = '\0';
+					drw_clr_create(drw, &systray->bg, buf);
+					i += 7;
 				}
 			}
 
@@ -2416,7 +2425,10 @@ updatesystray(void)
 	}
 	for (w = 0, i = systray->icons; i; i = i->next) {
 		/* make sure the background color stays the same */
-		wa.background_pixel  = scheme[SchemeNorm][ColBg].pixel;
+		if (systray->bg.pixel) 
+			wa.background_pixel  = systray->bg.pixel;
+		else
+			wa.background_pixel  = scheme[SchemeNorm][ColBg].pixel;
 		XChangeWindowAttributes(dpy, i->win, CWBackPixel, &wa);
 		XMapRaised(dpy, i->win);
 		w += systrayspacing;
@@ -2427,8 +2439,8 @@ updatesystray(void)
 			i->mon = m;
 	}
 	w = w ? w + systrayspacing : 1;
-	if ( systrayposx )
-		x = systrayposx;
+	if ( systray->x )
+		x = systray->x + m->gappx;
 	else
 		x -= w;
 	wc.x = x; wc.y = m->by; wc.width = w; wc.height = bh;
@@ -2437,7 +2449,7 @@ updatesystray(void)
 	XMapWindow(dpy, systray->win);
 	XMapSubwindows(dpy, systray->win);
 	/* redraw background */
-	XSetForeground(dpy, drw->gc, scheme[SchemeNorm][ColBg].pixel);
+	XSetForeground(dpy, drw->gc, wa.background_pixel);
 	XFillRectangle(dpy, systray->win, drw->gc, 0, 0, w, bh);
 
 	XSync(dpy, False);
