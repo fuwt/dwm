@@ -185,6 +185,7 @@ static void destroynotify(XEvent *e);
 static void detach(Client *c);
 static void detachstack(Client *c);
 static Monitor *dirtomon(int dir);
+static int textw2d(char *s);
 static void drawbar(Monitor *m);
 static void drawbars(void);
 static int drawstatusbar(Monitor *m, int bh, char* text);
@@ -305,6 +306,7 @@ static Monitor *mons, *selmon;
 static Window root, wmcheckwin;
 int systrayposx = 0;
 static int statusx;
+
 
 /* configuration, allows nested code to access above variables */
 #include "config.h"
@@ -479,8 +481,34 @@ buttonpress(XEvent *e)
 			arg.ui = 1 << i;
 		} else if (ev->x < x + TEXTW(selmon->ltsymbol))
 			click = ClkLtSymbol;
-		else if (ev->x > statusx)
+		else if (ev->x > statusx){
+			char lastbutton;
+			char *text, *s, ch;
 			click = ClkStatusText;
+			lastbutton = '0' + ev->button;
+			int statuscmdn = 0;
+			x = statusx;
+			for (text = s = stext; *s && x <= ev->x; s++){
+				if(*s == '^'){
+					if(*(s+1) == 's'){
+						ch = *s;
+						*s = 0;
+						x += textw2d(text);
+						*s = ch;
+						s += 3;
+						text = s + 1;
+						/* sprintf(cmd, "notify-send \"%d %d %c\"", x, ev->x, *(s - 1)); */
+						/* system(cmd); */
+						if( x > ev->x)
+							break;
+						statuscmdn = *(s - 1);
+					}
+				}
+			}
+			char cmd[1023];
+			sprintf(cmd, "dwmsg click %c %c", statuscmdn, lastbutton);
+			system(cmd);
+		}
 		else
 			click = ClkWinTitle;
 	} else if ((c = wintoclient(ev->window))) {
@@ -792,6 +820,38 @@ dirtomon(int dir)
 	else
 		for (m = mons; m->next != selmon; m = m->next);
 	return m;
+}
+
+int textw2d(char *s){
+	char *text;
+	int len, i, isCode, w;
+	len = strlen(stext) + 1 ;
+	if (!(text = (char*) malloc(sizeof(char)*len)))
+		die("malloc");
+	memcpy(text, stext, len);
+
+	isCode = 0;
+	w = 0;
+	i = -1;
+	while (text[++i]) {
+		if (text[i] == '^') {
+			if (!isCode) {
+				isCode = 1;
+				text[i] = '\0';
+				w += TEXTW(text) - lrpad;
+				text[i] = '^';
+				if (text[++i] == 'f')
+					w += atoi(text + ++i);
+				else if (text[i] == 'a')
+					w += getsystraywidth();
+			} else {
+				isCode = 0;
+				text = text + i + 1;
+				i = -1;
+			}
+		}
+	}
+	return w;
 }
 
 int
