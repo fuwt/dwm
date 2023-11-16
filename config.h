@@ -33,10 +33,11 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class         instance    title       tags mask     isfloating   monitor */
-	{ "Gimp",        NULL,       NULL,       0,            1,           -1 },
-	{ "Firefox",     NULL,       NULL,       1 << 8,       0,           -1 },
-	{ "SpeedCrunch", NULL,       NULL,       0,            1,           -1 },
+	/* class         instance    title       tags mask     isfloating   monitor    scratchkey*/
+	{ "Gimp",        NULL,       NULL,       0,            1,           -1,        0  },
+	{ "Firefox",     NULL,       NULL,       1 << 8,       0,           -1,        0  },
+	{ "SpeedCrunch", NULL,       NULL,       0,            1,           -1,        0  },
+	{ "scratchpad",  NULL,       NULL,       0,            1,           -1,       's' },
 };
 
 /* layout(s) */
@@ -70,8 +71,7 @@ static const Layout layouts[] = {
 /* commands */
 static const char *dmenucmd[] = { "roficmd", NULL };
 static const char *termcmd[]  = { "alacritty", "-e", "start_tmux", NULL };
-static const char scratchpadname[] = "scratchpad";
-static const char *scratchpadcmd[] = { "alacritty", "--class", scratchpadname, "-e", "/home/fwt/Sync/bin/tmux_pad", NULL };
+static const char *scratchpadcmd[] = {"s", "alacritty", "--class", "scratchpad", "-e", "/home/fwt/Sync/bin/tmux_pad", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
