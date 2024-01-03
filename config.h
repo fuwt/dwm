@@ -12,7 +12,7 @@ static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display 
 static const int showsystray        = 1;        /* 0 means no systray */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = { "JetBrainsMono Nerd F0nt:size=12", "Noto Sans CJK SC:size:11", "JoyPixels:size=12" };
+static const char *fonts[]          = { "JetBrainsMono Nerd F0nt:size=14", "Noto Sans CJK SC:size:13", "JoyPixels:size=14" };
 static const char dmenufont[]       = "monospace:size=10";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
@@ -35,7 +35,7 @@ static const Rule rules[] = {
 	 */
 	/* class         instance    title       tags mask     isfloating   monitor    scratchkey*/
 	{ "Gimp",        NULL,       NULL,       0,            1,           -1,        0  },
-	{ "Firefox",     NULL,       NULL,       1 << 8,       0,           -1,        0  },
+	{ "firefox",     NULL,       NULL,       1 << 1,       0,           -1,        0  },
 	{ "SpeedCrunch", NULL,       NULL,       0,            1,           -1,        0  },
 	{ "scratchpad",  NULL,       NULL,       0,            1,           -1,       's' },
 };
@@ -47,7 +47,7 @@ static const int resizehints = 1;    /* 1 means respect size hints in tiled resi
 static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
 
 static const char *overviewtag = "OVERVIEW";
-static const Layout overviewlayout = { "舘",  overview };
+static const Layout overviewlayout = { "O",  overview };
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
