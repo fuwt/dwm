@@ -516,8 +516,6 @@ buttonpress(XEvent *e)
 						*s = ch;
 						s += 3;
 						text = s + 1;
-						/* sprintf(cmd, "notify-send \"%d %d %c\"", x, ev->x, *(s - 1)); */
-						/* system(cmd); */
 						if( x > ev->x)
 							break;
 						statuscmdn = *(s - 1);
@@ -843,12 +841,8 @@ dirtomon(int dir)
 }
 
 int textw2d(char *s){
-	char *text;
-	int len, i, isCode, w;
-	len = strlen(stext) + 1 ;
-	if (!(text = (char*) malloc(sizeof(char)*len)))
-		die("malloc");
-	memcpy(text, stext, len);
+	int  i, isCode, w;
+	char *text = s;
 
 	isCode = 0;
 	w = 0;
@@ -871,6 +865,7 @@ int textw2d(char *s){
 			}
 		}
 	}
+	w += TEXTW(text) - lrpad;
 	return w;
 }
 
