@@ -909,7 +909,7 @@ drawstatusbar(Monitor *m, int bh, char* stext) {
 		isCode = 0;
 	text = p;
 
-	x = ret = statusx = m->ww - w - 2 * m->gappx;
+	x = ret = statusx = m->ww - w;
 
 	drw_setscheme(drw, scheme[LENGTH(colors)]);
 	drw->scheme[ColFg] = scheme[SchemeNorm][ColFg];
@@ -2247,7 +2247,7 @@ togglebar(const Arg *arg)
 		}
 		XConfigureWindow(dpy, systray->win, CWY, &wc);
 	}
-	XMoveResizeWindow(dpy, selmon->barwin, selmon->wx + selmon->gappx, selmon->by, selmon->bw, bh);
+	XMoveResizeWindow(dpy, selmon->barwin, selmon->wx, selmon->by, selmon->bw, bh);
 	arrange(selmon);
 }
 
@@ -2387,7 +2387,7 @@ updatebars(void)
 		if (m->barwin)
 			continue;
 		updatebarpos(m);
-		m->barwin = XCreateWindow(dpy, root, m->wx + m->gappx, m->by, m->bw, bh, 0, DefaultDepth(dpy, screen),
+		m->barwin = XCreateWindow(dpy, root, m->wx, m->by, m->bw, bh, 0, DefaultDepth(dpy, screen),
 				CopyFromParent, DefaultVisual(dpy, screen),
 				CWOverrideRedirect|CWBackPixmap|CWEventMask, &wa);
 		XDefineCursor(dpy, m->barwin, cursor[CurNormal]->cursor);
@@ -2406,7 +2406,7 @@ updatebarpos(Monitor *m)
 	if (m->showbar) {
 		m->wh -= bh + 2 * bargappx ;
 		m->by = m->topbar ? m->wy + bargappx : m->wy + m->wh;
-		m->bw = m->ww - 2 * m->gappx;
+		m->bw = m->ww;
 		m->wy = m->topbar ? m->wy + bh + bargappx * 2 : m->wy;
 	} else
 		m->by = -bh;
@@ -2681,7 +2681,7 @@ updatesystray(void)
 	}
 	w = w ? w + systrayspacing : 1;
 	if ( systray->x )
-		x = systray->x + m->gappx;
+		x = systray->x;
 	else
 		x -= w;
 	wc.x = x; wc.y = m->by; wc.width = w; wc.height = bh;
