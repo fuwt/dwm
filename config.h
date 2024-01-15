@@ -2,7 +2,7 @@
 
 /* appearance */
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
-static const unsigned int gappx     = 10;       /* gaps between windows */
+static const unsigned int gappx     = 3;       /* gaps between windows */
 static const unsigned int bargappx  = 0;        /* gaps between bar top and bottom */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
@@ -33,12 +33,17 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class         instance    title       tags mask     isfloating   monitor    scratchkey*/
-	{ "Gimp",        NULL,       NULL,       0,            1,           -1,        0  },
-	{ "firefox",     NULL,       NULL,       1 << 1,       0,           -1,        0  },
-	{ "SpeedCrunch", NULL,       NULL,       0,            1,           -1,        0  },
-	{ "scratchpad",  NULL,       NULL,       0,            1,           -1,       's' },
+	/* class                instance    title       tags mask     isfloating   monitor    scratchkey*/
+	{ "Gimp",               NULL,       NULL,       0,            1,           -1,        0  },
+	{ "firefox",            NULL,       NULL,       1 << 1,       0,           -1,        0  },
+	{ "SpeedCrunch",        NULL,       NULL,       0,            1,           -1,        0  },
+	{ "float",              NULL,       NULL,       0,            1,           -1,        0  },
+	{ "scratchpad",         NULL,       NULL,       0,            1,           -1,       's' },
+	{ NULL,         "scratchpad",       NULL,       0,            1,           -1,       's' },
+	{ "qqmusic",            NULL,       NULL,       1 << 7,       0,           -1,        0 },
+	{ "TelegramDesktop",    NULL,       NULL,       1 << 4,       0,           -1,        0 },
 };
+
 
 /* layout(s) */
 static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
