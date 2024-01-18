@@ -72,6 +72,7 @@ static const Layout layouts[] = {
 #define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 
 /* commands */
+static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "roficmd", NULL };
 static const char *termcmd[]  = { "alacritty", "-e", "start_tmux", NULL };
 static const char *scratchpadcmd[] = {"s", "alacritty", "--class", "scratchpad", "-e", "/home/fwt/Sync/bin/tmux_pad", NULL };
