@@ -501,29 +501,29 @@ buttonpress(XEvent *e)
 			click = ClkLtSymbol;
 		else if (ev->x > statusx){
 			char lastbutton;
-			char *text, *s, ch;
+			char *text, *s;
 			click = ClkStatusText;
 			lastbutton = '0' + ev->button;
-			int statuscmdn = 0;
+			char command[512];
 			x = statusx;
 			for (text = s = stext; *s && x <= ev->x; s++){
 				if(*s == '^'){
-					if(*(s+1) == 's'){
-						ch = *s;
+					if(s[1] == ':'){
 						*s = 0;
 						x += textw2d(text);
-						*s = ch;
-						s += 3;
-						text = s + 1;
+						*s = '^';
+						i = 0;
+						while(s[++i] != '^');
+						text = s + i + 1;
 						if( x > ev->x)
 							break;
-						statuscmdn = *(s - 1);
+						s[i] = 0;
+						sprintf(command, "\"%s\" %c", s+2, lastbutton);
+						s[i] = '^';
 					}
 				}
 			}
-			char cmd[1023];
-			sprintf(cmd, "dwmsg click %c %c", statuscmdn, lastbutton);
-			system(cmd);
+			system(command);
 			}
 		else
 			click = ClkWinTitle;
@@ -967,6 +967,9 @@ drawstatusbar(Monitor *m, int bh, char* stext) {
 					buf[7] = '\0';
 					drw_clr_create(drw, &systray->bg, buf);
 					i += 7;
+				} else {
+					while(text[++i] != '^');
+					break;
 				}
 			}
 
